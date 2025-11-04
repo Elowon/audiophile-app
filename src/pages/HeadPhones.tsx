@@ -2,7 +2,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
-import "./Headphones.css";
+import "./HeadPhones.css";
 import bitmap4 from "../assets/images/Bitmap4.png";
 import group3 from "../assets/images2/Group 3.png";
 import headphone2 from "../assets/images2/headphone2.png";
