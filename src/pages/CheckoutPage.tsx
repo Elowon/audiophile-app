@@ -20,9 +20,10 @@ const CheckoutPage: React.FC = () => {
     watch,
   } = useForm();
 
-  const { cart, subtotal, clearCart } = useCart();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // ✅ Include totalItems from context
+  const { cart, subtotal, clearCart, totalItems } = useCart();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const createOrder = useMutation(api.orders.createOrder);
 
   const shipping = 50;
@@ -60,9 +61,7 @@ const CheckoutPage: React.FC = () => {
       console.log("✅ Order saved with ID:", orderId);
 
       setIsModalOpen(true);
-      setTimeout(() => {
-        clearCart();
-      }, 5000);
+      setTimeout(() => clearCart(), 5000);
     } catch (error) {
       console.error("❌ Checkout error:", error);
       alert("Something went wrong. Please try again.");
@@ -80,8 +79,11 @@ const CheckoutPage: React.FC = () => {
             <a href="/speakers">SPEAKERS</a>
             <a href="/earphones">EARPHONES</a>
           </nav>
+
+          {/* ✅ Show number of cart items */}
           <div className="cart-icon">
             <FaShoppingCart />
+            {totalItems > 0 && <span className="cart-count">{totalItems}</span>}
           </div>
         </header>
       </div>
@@ -95,6 +97,7 @@ const CheckoutPage: React.FC = () => {
           <form className="checkout-form" onSubmit={handleSubmit(onSubmit)}>
             <h2>CHECKOUT</h2>
 
+            {/* BILLING DETAILS */}
             <section className="billing-section">
               <h3>BILLING DETAILS</h3>
               <div className="form-grid">
@@ -107,9 +110,7 @@ const CheckoutPage: React.FC = () => {
                     {...register("name", { required: "Name is required" })}
                   />
                   {errors.name && (
-                    <p className="error-message">
-                      {errors.name.message as string}
-                    </p>
+                    <p className="error-message">{errors.name.message as string}</p>
                   )}
                 </div>
 
@@ -128,9 +129,7 @@ const CheckoutPage: React.FC = () => {
                     })}
                   />
                   {errors.email && (
-                    <p className="error-message">
-                      {errors.email.message as string}
-                    </p>
+                    <p className="error-message">{errors.email.message as string}</p>
                   )}
                 </div>
 
@@ -149,14 +148,13 @@ const CheckoutPage: React.FC = () => {
                     })}
                   />
                   {errors.phone && (
-                    <p className="error-message">
-                      {errors.phone.message as string}
-                    </p>
+                    <p className="error-message">{errors.phone.message as string}</p>
                   )}
                 </div>
               </div>
             </section>
 
+            {/* SHIPPING INFO */}
             <section className="shipping-section">
               <h3>SHIPPING INFO</h3>
               <div className="form-group">
@@ -168,9 +166,7 @@ const CheckoutPage: React.FC = () => {
                   {...register("address", { required: "Address is required" })}
                 />
                 {errors.address && (
-                  <p className="error-message">
-                    {errors.address.message as string}
-                  </p>
+                  <p className="error-message">{errors.address.message as string}</p>
                 )}
               </div>
 
@@ -190,9 +186,7 @@ const CheckoutPage: React.FC = () => {
                     })}
                   />
                   {errors.zip && (
-                    <p className="error-message">
-                      {errors.zip.message as string}
-                    </p>
+                    <p className="error-message">{errors.zip.message as string}</p>
                   )}
                 </div>
 
@@ -205,9 +199,7 @@ const CheckoutPage: React.FC = () => {
                     {...register("city", { required: "City is required" })}
                   />
                   {errors.city && (
-                    <p className="error-message">
-                      {errors.city.message as string}
-                    </p>
+                    <p className="error-message">{errors.city.message as string}</p>
                   )}
                 </div>
               </div>
@@ -221,13 +213,12 @@ const CheckoutPage: React.FC = () => {
                   {...register("country", { required: "Country is required" })}
                 />
                 {errors.country && (
-                  <p className="error-message">
-                    {errors.country.message as string}
-                  </p>
+                  <p className="error-message">{errors.country.message as string}</p>
                 )}
               </div>
             </section>
 
+            {/* PAYMENT DETAILS */}
             <section className="payment-section">
               <h3>PAYMENT DETAILS</h3>
               <label>Payment Method</label>
@@ -260,14 +251,10 @@ const CheckoutPage: React.FC = () => {
                       id="emoney"
                       type="text"
                       placeholder="238521993"
-                      {...register("emoney", {
-                        required: "e-Money number is required",
-                      })}
+                      {...register("emoney", { required: "e-Money number is required" })}
                     />
                     {errors.emoney && (
-                      <p className="error-message">
-                        {errors.emoney.message as string}
-                      </p>
+                      <p className="error-message">{errors.emoney.message as string}</p>
                     )}
                   </div>
 
@@ -279,30 +266,25 @@ const CheckoutPage: React.FC = () => {
                       placeholder="6891"
                       {...register("pin", {
                         required: "PIN is required",
-                        pattern: {
-                          value: /^[0-9]{4}$/,
-                          message: "Must be 4 digits",
-                        },
+                        pattern: { value: /^[0-9]{4}$/, message: "Must be 4 digits" },
                       })}
                     />
                     {errors.pin && (
-                      <p className="error-message">
-                        {errors.pin.message as string}
-                      </p>
+                      <p className="error-message">{errors.pin.message as string}</p>
                     )}
                   </div>
                 </div>
               ) : (
                 <p className="cash-info">
-                  The “Cash on Delivery” option enables you to pay in cash when
-                  our delivery courier arrives at your residence. Please make
-                  sure your address is correct so that your order will not be
-                  cancelled.
+                  The “Cash on Delivery” option enables you to pay in cash when our
+                  delivery courier arrives at your residence. Please make sure your
+                  address is correct so that your order will not be cancelled.
                 </p>
               )}
             </section>
           </form>
 
+          {/* SUMMARY */}
           <form onSubmit={handleSubmit(onSubmit)}>
             <aside className="summary">
               <h3>SUMMARY</h3>
@@ -353,11 +335,7 @@ const CheckoutPage: React.FC = () => {
             onClose={() => setIsModalOpen(false)}
             firstItem={
               firstItem
-                ? {
-                    name: firstItem.name,
-                    image: firstItem.image,
-                    quantity: firstItem.quantity,
-                  }
+                ? { name: firstItem.name, image: firstItem.image, quantity: firstItem.quantity }
                 : null
             }
             otherCount={otherCount}
@@ -377,9 +355,9 @@ const CheckoutPage: React.FC = () => {
           </nav>
         </div>
         <p className="Earphone-footer-text">
-          Audiophile is an all-in-one stop to fulfill your audio needs. We're a
-          small team of music lovers and sound specialists who are devoted to
-          helping you get the most out of personal audio.
+          Audiophile is an all-in-one stop to fulfill your audio needs. We're a small team
+          of music lovers and sound specialists who are devoted to helping you get the most
+          out of personal audio.
         </p>
         <div className="Earphone-footer-bottom">
           <p>Copyright {new Date().getFullYear()}. All Rights Reserved</p>
