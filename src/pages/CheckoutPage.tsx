@@ -63,6 +63,8 @@ const CheckoutPage: React.FC = () => {
 
       console.log("✅ Order saved with ID:", orderId);
 
+      console.log("✅ Before modal open, cart:", cart);
+console.log("✅ Setting modal open now...");
       setIsModalOpen(true);
       setTimeout(() => {
         clearCart();
