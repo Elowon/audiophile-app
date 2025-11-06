@@ -1,4 +1,4 @@
-import { useAction, useMutation } from "convex/react";
+import { useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useState } from "react";
 import "./CheckoutPage.css";
@@ -24,7 +24,7 @@ const CheckoutPage: React.FC = () => {
 
   
   const createOrder = useMutation(api.orders.createOrder);
-  const sendOrderEmail = useAction(api.sendEmail.sendOrderEmail);
+ 
 
   
   const shipping = 50;
@@ -63,19 +63,9 @@ const CheckoutPage: React.FC = () => {
 
       console.log("✅ Order saved with ID:", orderId);
 
-      
-      await sendOrderEmail({
-        to: data.email,
-        name: data.name,
-        orderId,
-        grandTotal,
-      });
-
-      console.log("📧 Confirmation email sent to:", data.email);
-
-      
+      console.log("DEBUG: about to open modal for test");
       setIsModalOpen(true);
-      setTimeout(() => { clearCart(); }, 3000);
+      setTimeout(() => { clearCart(); }, 10000);
     } catch (error) {
       console.error("❌ Checkout error:", error);
       alert("Something went wrong. Please try again.");

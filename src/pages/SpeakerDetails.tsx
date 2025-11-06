@@ -23,6 +23,7 @@ import { useCart } from "../context/CartContext";
 const SpeakerDetails: React.FC = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const navigate = useNavigate();
+  const {totalItems} = useCart();
 
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
@@ -58,8 +59,30 @@ const SpeakerDetails: React.FC = () => {
               EARPHONES
             </a>
           </nav>
-          <div className="cart-icon" onClick={() => setCartOpen(true)}>
-            <FaShoppingCart />
+          <div
+            className="cart-icon"
+            onClick={() => setCartOpen(true)}
+            style={{ position: "relative" }}
+          >
+            <FaShoppingCart size={22} />
+
+            {totalItems > 0 && (
+              <span
+                style={{
+                  position: "absolute",
+                  top: "-8px",
+                  right: "-8px",
+                  backgroundColor: "red",
+                  color: "white",
+                  borderRadius: "50%",
+                  padding: "2px 6px",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                }}
+              >
+                {totalItems}
+              </span>
+            )}
           </div>
           <CartModal isOpen={cartOpen} onClose={() => setCartOpen(false)} />
         </header>
@@ -76,9 +99,10 @@ const SpeakerDetails: React.FC = () => {
               <p className="new-label">NEW PRODUCT</p>
               <h2 className="product-title">ZXP SPEAKER</h2>
               <p className="product-desc">
-                Upgrade your sound system with the all new ZX9 active speaker. 
-                It's a bookshelf speaker system that offers truly wireless connectivity -- 
-                creating new possibilities for more pleasing and practical audio setups.
+                Upgrade your sound system with the all new ZX9 active speaker.
+                It's a bookshelf speaker system that offers truly wireless
+                connectivity -- creating new possibilities for more pleasing and
+                practical audio setups.
               </p>
               <p className="product-price">$ 2,999</p>
               <div className="add-to-cart">

@@ -15,9 +15,13 @@ import { useNavigate } from "react-router-dom";
 import CartModal from "./CartModel";
 import { useState } from "react";
 import HamburgerMenu from "../components/HamburgerMenu";
+import { useCart } from "../context/CartContext";
+
 
 const HomePage = () => {
   const [cartOpen, setCartOpen] = useState(false);
+  const { totalItems } = useCart();
+
 
   const navigate = useNavigate();
   return (
@@ -40,9 +44,28 @@ const HomePage = () => {
             </a>
           </nav>
           <HamburgerMenu />
-          <div className="cart-icon" onClick={() => setCartOpen(true)}>
-            <FaShoppingCart />
-          </div>
+          <div className="cart-icon" onClick={() => setCartOpen(true)} style={{ position: "relative" }}>
+  <FaShoppingCart size={22} />
+
+  {totalItems > 0 && (
+    <span
+      style={{
+        position: "absolute",
+        top: "-8px",
+        right: "-8px",
+        backgroundColor: "red",
+        color: "white",
+        borderRadius: "50%",
+        padding: "2px 6px",
+        fontSize: "12px",
+        fontWeight: "bold",
+      }}
+    >
+      {totalItems}
+    </span>
+  )}
+</div>
+
           <CartModal isOpen={cartOpen} onClose={() => setCartOpen(false)} />
         </header>
 

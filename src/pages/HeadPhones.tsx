@@ -13,10 +13,12 @@ import group6 from "../assets/images/Group 6.png";
 import { useNavigate } from "react-router-dom";
 import CartModal from "./CartModel";
 import { useState } from "react";
+import { useCart } from "../context/CartContext";
 
 const Headphones = () => {
   const [cartOpen, setCartOpen] = useState(false);
   const navigate = useNavigate();
+  const {totalItems} = useCart();
   return (
     <main className="headphones-page">
       <div className="headphone-container">
@@ -36,8 +38,30 @@ const Headphones = () => {
               EARPHONES
             </a>
           </nav>
-          <div className="cart-icon" onClick={() => setCartOpen(true)}>
-            <FaShoppingCart />
+          <div
+            className="cart-icon"
+            onClick={() => setCartOpen(true)}
+            style={{ position: "relative" }}
+          >
+            <FaShoppingCart size={22} />
+
+            {totalItems > 0 && (
+              <span
+                style={{
+                  position: "absolute",
+                  top: "-8px",
+                  right: "-8px",
+                  backgroundColor: "red",
+                  color: "white",
+                  borderRadius: "50%",
+                  padding: "2px 6px",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                }}
+              >
+                {totalItems}
+              </span>
+            )}
           </div>
           <CartModal isOpen={cartOpen} onClose={() => setCartOpen(false)} />
         </header>

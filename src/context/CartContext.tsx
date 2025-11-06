@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
-
 export interface CartItem {
   id: string;
   name: string;
@@ -19,26 +18,25 @@ interface CartContextType {
   increaseQuantity: (id: string) => void;
   decreaseQuantity: (id: string) => void;
   clearCart: () => void;
-  
+
   isCartOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
+  totalItems: number;
 }
-
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-
-export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const CartProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [cart, setCart] = useState<CartItem[]>(() => {
-    
     const storedCart = localStorage.getItem("cart");
     return storedCart ? JSON.parse(storedCart) : [];
   });
 
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
@@ -46,25 +44,22 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const openCart = () => setIsCartOpen(true);
   const closeCart = () => setIsCartOpen(false);
 
- const addToCart = (item: CartItem) => {
-  setCart((prev) => {
-    
-    const existingIndex = prev.findIndex((p) => p.id === item.id);
+  const addToCart = (item: CartItem) => {
+    setCart((prev) => {
+      const existingIndex = prev.findIndex((p) => p.id === item.id);
 
-    
-    if (existingIndex !== -1) {
-      const updatedCart = [...prev];
-      updatedCart[existingIndex] = {
-        ...updatedCart[existingIndex],
-        quantity: updatedCart[existingIndex].quantity + item.quantity,
-      };
-      return updatedCart;
-    }
+      if (existingIndex !== -1) {
+        const updatedCart = [...prev];
+        updatedCart[existingIndex] = {
+          ...updatedCart[existingIndex],
+          quantity: updatedCart[existingIndex].quantity + item.quantity,
+        };
+        return updatedCart;
+      }
 
-   
-    return [...prev, item];
-  });
-};
+      return [...prev, item];
+    });
+  };
 
   const removeFromCart = (id: string) => {
     setCart((prev) => prev.filter((p) => p.id !== id));
@@ -75,7 +70,9 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const increaseQuantity = (id: string) => {
-    setCart((prev) => prev.map((p) => (p.id === id ? { ...p, quantity: p.quantity + 1 } : p)));
+    setCart((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, quantity: p.quantity + 1 } : p))
+    );
   };
 
   const decreaseQuantity = (id: string) => {
@@ -88,10 +85,14 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const clearCart = () => {
     setCart([]);
-    localStorage.removeItem("cart"); 
+    localStorage.removeItem("cart");
   };
 
-  const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <CartContext.Provider
@@ -107,6 +108,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         isCartOpen,
         openCart,
         closeCart,
+        totalItems,
       }}
     >
       {children}

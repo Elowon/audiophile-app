@@ -24,6 +24,7 @@ const ProductHeadphone3: React.FC = () => {
   const [cartOpen, setCartOpen] = useState(false);
 
   const navigate = useNavigate();
+  const {totalItems} = useCart();
 
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
@@ -59,8 +60,30 @@ const ProductHeadphone3: React.FC = () => {
               EARPHONES
             </a>
           </nav>
-          <div className="cart-icon" onClick={() => setCartOpen(true)}>
-            <FaShoppingCart />
+          <div
+            className="cart-icon"
+            onClick={() => setCartOpen(true)}
+            style={{ position: "relative" }}
+          >
+            <FaShoppingCart size={22} />
+
+            {totalItems > 0 && (
+              <span
+                style={{
+                  position: "absolute",
+                  top: "-8px",
+                  right: "-8px",
+                  backgroundColor: "red",
+                  color: "white",
+                  borderRadius: "50%",
+                  padding: "2px 6px",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                }}
+              >
+                {totalItems}
+              </span>
+            )}
           </div>
           <CartModal isOpen={cartOpen} onClose={() => setCartOpen(false)} />
         </header>
@@ -77,9 +100,10 @@ const ProductHeadphone3: React.FC = () => {
               <p className="new-label">NEW PRODUCT</p>
               <h2 className="product-title">XX59 HEADPHONES</h2>
               <p className="product-desc">
-                Enjoy your audio almost anywhere and customize it to your specific 
-                tastes with the XX59 headphones. The stylish yet durable versatile 
-                wireless headset is a brilliant companion at home or on the move.
+                Enjoy your audio almost anywhere and customize it to your
+                specific tastes with the XX59 headphones. The stylish yet
+                durable versatile wireless headset is a brilliant companion at
+                home or on the move.
               </p>
               <p className="product-price">$ 2,999</p>
               <div className="add-to-cart">

@@ -24,6 +24,7 @@ const ProductHeadphone1: React.FC = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const { totalItems } = useCart();
 
   const handleAddToCart = () => {
     const product = {
@@ -35,7 +36,7 @@ const ProductHeadphone1: React.FC = () => {
     };
 
     addToCart(product);
-    setCartOpen(true);;
+    setCartOpen(true);
   };
 
   return (
@@ -57,8 +58,30 @@ const ProductHeadphone1: React.FC = () => {
               EARPHONES
             </a>
           </nav>
-          <div className="cart-icon" onClick={() => setCartOpen(true)}>
-            <FaShoppingCart />
+          <div
+            className="cart-icon"
+            onClick={() => setCartOpen(true)}
+            style={{ position: "relative" }}
+          >
+            <FaShoppingCart size={22} />
+
+            {totalItems > 0 && (
+              <span
+                style={{
+                  position: "absolute",
+                  top: "-8px",
+                  right: "-8px",
+                  backgroundColor: "red",
+                  color: "white",
+                  borderRadius: "50%",
+                  padding: "2px 6px",
+                  fontSize: "12px",
+                  fontWeight: "bold",
+                }}
+              >
+                {totalItems}
+              </span>
+            )}
           </div>
           <CartModal isOpen={cartOpen} onClose={() => setCartOpen(false)} />
         </header>
